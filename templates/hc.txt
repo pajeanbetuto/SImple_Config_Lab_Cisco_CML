@@ -1,0 +1,3 @@
+sh run
+sh ip route
+sh ip ospf neigh

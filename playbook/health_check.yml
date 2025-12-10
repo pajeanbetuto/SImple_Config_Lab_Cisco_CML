@@ -1,0 +1,14 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: run HC
+      ios_command:
+        commands: "{{ lookup('file', '../templates/hc.txt').splitlines() }}"
+      register: output
+    - name: save output to file
+      copy:
+        content: "{{ output.stdout_lines }}"
+        dest: "../templates/{{ inventory_hostname }}_{{ ansible_date_time.iso8601 }}hc_output.txt"
+    - name: display output
+      debug:
+        var: output.stdout_lines
