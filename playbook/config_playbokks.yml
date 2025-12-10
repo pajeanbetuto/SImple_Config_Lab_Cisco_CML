@@ -1,0 +1,43 @@
+- hosts: cisco_router
+  gather_facts: no
+  tasks:
+    - name: cisco backup
+      ios_config:
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}_backup.cfg"
+    - name: run interface config
+      ios_config:
+        src: "../templates/interface.j2"
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}_interface.cfg"
+    - name: run ospf config
+      ios_config:
+        src: "../templates/ospf.j2"
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}_ospf.cfg"
+    - name: run dhcp config
+      ios_config:
+        src: "../templates/dhcp.j2"
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}_dhcp.cfg"
+      when: inventory_hostname == "R1"
+    - name: run helper_address config
+      ios_config:
+        src: "../templates/helper_address.j2"
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}_helper_address.cfg"
+      when: inventory_hostname == "R2"
+    - name: new backup
+      ios_config:
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}_new_backup_after.cfg"
+    - name: save config
+      ios_config:
+        save: yes
+
